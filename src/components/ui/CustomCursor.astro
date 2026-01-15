@@ -107,10 +107,23 @@
           useCORS: true,
           scale: window.devicePixelRatio || 1,
           windowWidth: document.documentElement.scrollWidth,
-          windowHeight: document.documentElement.scrollHeight
+          windowHeight: document.documentElement.scrollHeight,
+          onclone: (clonedDoc: Document) => {
+            clonedDoc.querySelectorAll('*').forEach(el => {
+              const htmlEl = el as HTMLElement;
+              const computed = window.getComputedStyle(htmlEl);
+              if (computed.backgroundColor.includes('oklch') || computed.backgroundColor.includes('color(')) {
+                htmlEl.style.backgroundColor = 'transparent';
+              }
+              if (computed.color.includes('oklch') || computed.color.includes('color(')) {
+                htmlEl.style.color = 'inherit';
+              }
+            });
+          }
         });
       } catch (e) {
-        console.warn('Snapshot failed:', e);
+        // Silently fail - cursor zoom is a nice-to-have feature
+        pageSnapshot = null;
       }
       circleElement.style.visibility = 'visible';
       dotElement.style.visibility = 'visible';

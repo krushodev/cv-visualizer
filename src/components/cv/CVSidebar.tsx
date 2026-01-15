@@ -15,18 +15,50 @@ export const CVSidebar = ({ is3D, setIs3D }: CVSidebarProps) => {
     setIsDark(dark);
   }, []);
 
-  const handleThemeClick = () => {
+  const handleThemeClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const currentlyDark = document.documentElement.classList.contains('dark');
 
-    if (currentlyDark) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      setIsDark(false);
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      setIsDark(true);
+    if (!document.startViewTransition) {
+      if (currentlyDark) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        setIsDark(false);
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        setIsDark(true);
+      }
+      return;
     }
+
+    const x = event.clientX;
+    const y = event.clientY;
+    const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+
+    const transition = document.startViewTransition(async () => {
+      if (currentlyDark) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        setIsDark(false);
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        setIsDark(true);
+      }
+    });
+
+    await transition.ready;
+
+    const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`];
+
+    document.documentElement.animate(
+      { clipPath: currentlyDark ? clipPath : [...clipPath].reverse() },
+      {
+        duration: 500,
+        easing: 'ease-in-out',
+        pseudoElement: currentlyDark ? '::view-transition-new(root)' : '::view-transition-old(root)'
+      }
+    );
   };
 
   const handleIs3DClick = () => {
