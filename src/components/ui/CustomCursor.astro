@@ -1,0 +1,186 @@
+---
+
+---
+
+<div class="cursor-circle" aria-hidden="true" role="presentation" tabindex="-1">
+  <canvas class="cursor-zoom-canvas"></canvas>
+</div>
+<div class="cursor-dot" aria-hidden="true" role="presentation" tabindex="-1"></div>
+
+<style>
+  .cursor-circle {
+    --circle-size: 60px;
+    position: fixed;
+    height: var(--circle-size);
+    width: var(--circle-size);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    top: calc(var(--circle-size) / 2 * -1);
+    left: calc(var(--circle-size) / 2 * -1);
+    pointer-events: none;
+    z-index: 9999;
+    will-change: transform;
+    overflow: hidden;
+  }
+
+  .cursor-zoom-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    transform: scale(1.5);
+  }
+
+  .cursor-dot {
+    --dot-size: 6px;
+    position: fixed;
+    height: var(--dot-size);
+    width: var(--dot-size);
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 50%;
+    top: calc(var(--dot-size) / 2 * -1);
+    left: calc(var(--dot-size) / 2 * -1);
+    pointer-events: none;
+    z-index: 10000;
+    will-change: transform;
+  }
+
+  :global(.dark) .cursor-circle {
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  :global(.dark) .cursor-dot {
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  @media (max-width: 768px), (hover: none) {
+    .cursor-circle,
+    .cursor-dot {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-circle,
+    .cursor-dot {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import html2canvas from 'html2canvas';
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const circleElement = document.querySelector('.cursor-circle') as HTMLElement;
+  const dotElement = document.querySelector('.cursor-dot') as HTMLElement;
+  const canvasElement = document.querySelector('.cursor-zoom-canvas') as HTMLCanvasElement;
+
+  if (prefersReducedMotion || !circleElement || !dotElement || !canvasElement) {
+    if (circleElement) circleElement.style.display = 'none';
+    if (dotElement) dotElement.style.display = 'none';
+  } else {
+    document.body.style.cursor = 'none';
+
+    const CIRCLE_SIZE = 60;
+    const ZOOM_FACTOR = 1.5;
+    const ctx = canvasElement.getContext('2d');
+    canvasElement.width = CIRCLE_SIZE;
+    canvasElement.height = CIRCLE_SIZE;
+
+    const mouse = { x: 0, y: 0 };
+    const circle = { x: 0, y: 0 };
+    const dot = { x: 0, y: 0 };
+
+    let pageSnapshot: HTMLCanvasElement | null = null;
+    let snapshotTimeout: number | null = null;
+
+    const captureSnapshot = async () => {
+      circleElement.style.visibility = 'hidden';
+      dotElement.style.visibility = 'hidden';
+      try {
+        pageSnapshot = await html2canvas(document.body, {
+          logging: false,
+          useCORS: true,
+          scale: window.devicePixelRatio || 1,
+          windowWidth: document.documentElement.scrollWidth,
+          windowHeight: document.documentElement.scrollHeight
+        });
+      } catch (e) {
+        console.warn('Snapshot failed:', e);
+      }
+      circleElement.style.visibility = 'visible';
+      dotElement.style.visibility = 'visible';
+    };
+
+    const scheduleSnapshot = () => {
+      if (snapshotTimeout) clearTimeout(snapshotTimeout);
+      snapshotTimeout = window.setTimeout(captureSnapshot, 100);
+    };
+
+    setTimeout(captureSnapshot, 500);
+
+    window.addEventListener('scroll', scheduleSnapshot, { passive: true });
+    window.addEventListener('resize', scheduleSnapshot, { passive: true });
+
+    window.addEventListener('mousemove', e => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    const drawZoom = () => {
+      if (!ctx || !pageSnapshot) return;
+
+      ctx.clearRect(0, 0, CIRCLE_SIZE, CIRCLE_SIZE);
+
+      const sourceX = (circle.x + window.scrollX - CIRCLE_SIZE / (2 * ZOOM_FACTOR)) * (pageSnapshot.width / document.documentElement.scrollWidth);
+      const sourceY = (circle.y + window.scrollY - CIRCLE_SIZE / (2 * ZOOM_FACTOR)) * (pageSnapshot.height / document.documentElement.scrollHeight);
+      const sourceSize = (CIRCLE_SIZE / ZOOM_FACTOR) * (pageSnapshot.width / document.documentElement.scrollWidth);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(CIRCLE_SIZE / 2, CIRCLE_SIZE / 2, CIRCLE_SIZE / 2, 0, Math.PI * 2);
+      ctx.clip();
+
+      ctx.drawImage(pageSnapshot, sourceX, sourceY, sourceSize, sourceSize, 0, 0, CIRCLE_SIZE, CIRCLE_SIZE);
+
+      ctx.restore();
+    };
+
+    gsap.ticker.add(() => {
+      circle.x += (mouse.x - circle.x) * 0.12;
+      circle.y += (mouse.y - circle.y) * 0.12;
+
+      dot.x += (mouse.x - dot.x) * 0.4;
+      dot.y += (mouse.y - dot.y) * 0.4;
+
+      gsap.set(circleElement, {
+        x: circle.x,
+        y: circle.y
+      });
+
+      gsap.set(dotElement, {
+        x: dot.x,
+        y: dot.y
+      });
+
+      drawZoom();
+    });
+
+    document.addEventListener('mouseleave', () => {
+      gsap.to([circleElement, dotElement], {
+        opacity: 0,
+        duration: 0.2
+      });
+    });
+
+    document.addEventListener('mouseenter', () => {
+      gsap.to([circleElement, dotElement], {
+        opacity: 1,
+        duration: 0.2
+      });
+    });
+  }
+</script>

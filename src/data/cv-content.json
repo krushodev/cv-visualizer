@@ -1,0 +1,66 @@
+{
+  "profile": {
+    "name": "Ignacio Kruchowski",
+    "role": "FRONTEND / FULL STACK DEVELOPER",
+    "email": "ignakruchowski@gmail.com",
+    "linkedin": "linkedin.com/in/ignacio-kruchowski",
+    "github": "github.com/krushodev",
+    "summary": "Con experiencia en la creación de interfaces de usuario eficientes, escalables y orientadas a la experiencia del usuario. Manejo de React, Next.js, TypeScript, Redux, HTML5 y CSS3, así como en el desarrollo de aplicaciones móviles con React Native y Expo.\n\nCuento con conocimientos en arquitectura de software, bases de datos, DevOps y backend con Node.js y Express.js, aporto una visión integral en el ciclo de desarrollo. Me destaco por aplicar principios de diseño, responsive design y mobile first, garantizando productos modernos y mantenibles."
+  },
+  "experience": [
+    {
+      "id": "exp-1",
+      "company": "A4F",
+      "role": "Full Stack Developer",
+      "period": "Ene. 2025 - Sep. 2025 (9 meses)",
+      "bullets": [
+        "Desarrollé funcionalidades clave en aplicaciones web con Next.js y Astro, mejorando la escalabilidad y mantenibilidad.",
+        "Lideré la integración de soluciones backend con Python (FastAPI) y NestJS, gestionando la persistencia de datos con MongoDB y PostgreSQL, y desplegando con Docker y AWS.",
+        "Integré capacidades de Inteligencia Artificial en aplicaciones, aplicando ingeniería de prompts con LangGraph para optimizar respuestas de LLMs.",
+        "Colaboré en el desarrollo de una aplicación móvil multiplataforma con React Native y Expo Go, mejorando la accesibilidad y la UX.",
+        "Participé activamente en un entorno ágil, contribuyendo en sprints, revisiones de código y gestión colaborativa con Git."
+      ]
+    },
+    {
+      "id": "exp-2",
+      "company": "Sempiterno Group",
+      "role": "Frontend Developer",
+      "period": "Dic. 2023 - Jun. 2024 (7 meses)",
+      "bullets": [
+        "Desarrollé y optimicé aplicaciones web con ReactJS y NextJS",
+        "Llevé a cabo el mantenimiento de diferentes proyectos, garantizando soluciones eficaces",
+        "Planifiqué estratégicamente el desarrollo de componentes reutilizables para optimizar la gestión del código",
+        "Asumí roles de liderazgo en momentos clave, facilitando la colaboración del equipo para alcanzar los objetivos establecidos"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "edu-1",
+      "institution": "Universidad Nacional del Nordeste",
+      "degree": "Licenciatura en Sistemas de la Información",
+      "period": "2024 - 2029"
+    }
+  ],
+  "skills": [
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Redux",
+    "HTML5",
+    "CSS3",
+    "Astro",
+    "React Native",
+    "Expo",
+    "Node.js",
+    "Express.js",
+    "Python",
+    "FastAPI",
+    "NestJS",
+    "Docker",
+    "AWS",
+    "MongoDB",
+    "PostgreSQL",
+    "Git"
+  ]
+}

@@ -1,16 +1,29 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import { CVContainer } from '../components/cv/CVContainer';
+import cvData from '../data/cv-content.json';
 
+// Importante: client:load es necesario porque CVContainer usa estado de React y Framer Motion
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title={`CV - ${cvData.profile.name}`}>
+  <CVContainer client:load initialData={cvData} />
+</Layout>
+
+<style is:global>
+  /* Fix para impresión */
+  @media print {
+    body {
+      background: white !important;
+    }
+    /* Ocultamos la barra de herramientas al imprimir */
+    button,
+    .fixed {
+      display: none !important;
+    }
+    /* Reseteamos transformaciones 3D para que salga plano en papel */
+    .transform-none-print {
+      transform: none !important;
+    }
+  }
+</style>
