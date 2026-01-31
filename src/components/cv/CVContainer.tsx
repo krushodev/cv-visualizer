@@ -102,14 +102,14 @@ const CVContainerInner = () => {
       const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
       if (!iframeDoc) throw new Error('Could not access iframe document');
 
-      // Get colors based on theme
-      const bgColor = isDark ? '#212121' : '#ffffff';
-      const textColor = isDark ? '#e2e8f0' : '#000000';
-      const headingColor = isDark ? '#ffffff' : '#000000';
-      const mutedColor = isDark ? '#cbd5e1' : '#000000';
-      const linkColor = isDark ? '#60a5fa' : '#2563eb';
-      const borderColor = isDark ? '#ffffff' : '#000000';
-      const sectionBorderColor = isDark ? '#475569' : '#000000';
+      // Always use light theme colors for PDF
+      const bgColor = '#ffffff';
+      const textColor = '#000000';
+      const headingColor = '#000000';
+      const mutedColor = '#000000';
+      const linkColor = '#2563eb';
+      const borderColor = '#000000';
+      const sectionBorderColor = '#000000';
 
       // Keywords to highlight in bold
       const keywords = [
@@ -204,7 +204,7 @@ const CVContainerInner = () => {
               .summary p { margin-bottom: 12px; }
               section { margin-bottom: 24px; }
               .exp-item { margin-bottom: 20px; }
-              .exp-period { font-size: 12px; color: ${isDark ? '#94a3b8' : '#4b5563'}; margin-bottom: 8px; }
+              .exp-period { font-size: 12px; color: #4b5563; margin-bottom: 8px; }
               ul { list-style-type: disc; margin-left: 16px; margin-top: 8px; }
               li { margin-bottom: 4px; }
               a { color: ${linkColor}; text-decoration: none; }
