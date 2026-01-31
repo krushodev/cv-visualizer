@@ -84,8 +84,8 @@ const CVContainerInner = () => {
       const { default: jsPDF } = await import('jspdf');
       const { default: html2canvas } = await import('html2canvas');
 
-      // Detect language from CV data
-      const isEnglish = cvData.profile.summary.includes('Experienced in creating efficient');
+      // Detect language from CV data (Spanish uses "Actualidad", English uses "Present")
+      const isEnglish = cvData.experience[0]?.period?.includes('Present') && !cvData.experience[0]?.period?.includes('Actualidad');
       const langSuffix = isEnglish ? 'EN' : 'ES';
       const fileName = `CV_IGNACIO_KRUCHOWSKI_${langSuffix}.pdf`;
 
@@ -106,15 +106,16 @@ const CVContainerInner = () => {
       const bgColor = '#ffffff';
       const textColor = '#000000';
       const headingColor = '#000000';
-      const mutedColor = '#000000';
+      const mutedColor = '#4b5563';
       const linkColor = '#2563eb';
       const borderColor = '#000000';
-      const sectionBorderColor = '#000000';
 
       // Keywords to highlight in bold
       const keywords = [
         'React',
+        'ReactJS',
         'Next.js',
+        'NextJS',
         'TypeScript',
         'Redux',
         'HTML5',
@@ -134,8 +135,15 @@ const CVContainerInner = () => {
         'PostgreSQL',
         'Git',
         'LangGraph',
+        'LLM',
         'LLMs',
-        'UX'
+        'UX',
+        'Agile',
+        'Java Servlets',
+        'JSP',
+        'Bootstrap',
+        'Artificial Intelligence',
+        'Inteligencia Artificial'
       ];
 
       const highlightText = (text: string) => {
@@ -167,8 +175,6 @@ const CVContainerInner = () => {
                 line-height: 1.5;
               }
               header {
-                border-bottom: 2px solid ${borderColor};
-                padding-bottom: 16px;
                 margin-bottom: 24px;
               }
               h1 {
@@ -184,15 +190,21 @@ const CVContainerInner = () => {
                 font-weight: 400;
                 color: ${mutedColor};
                 letter-spacing: 0.05em;
+                margin-bottom: 16px;
+              }
+              .header-separator {
+                border-bottom: 2px solid ${borderColor};
               }
               .section-title {
                 font-size: 20px;
                 font-weight: 700;
                 text-transform: uppercase;
                 color: ${headingColor};
-                padding-bottom: 8px;
                 margin-bottom: 16px;
-                border-bottom: 1px solid ${sectionBorderColor};
+              }
+              .section-separator {
+                border-bottom: 1px solid ${borderColor};
+                margin-top: 20px;
               }
               h4 {
                 font-size: 16px;
@@ -200,10 +212,8 @@ const CVContainerInner = () => {
                 color: ${headingColor};
                 margin-bottom: 2px;
               }
-              .summary { margin-bottom: 24px; }
-              .summary p { margin-bottom: 12px; }
               section { margin-bottom: 24px; }
-              .exp-item { margin-bottom: 20px; }
+              .exp-item { margin-bottom: 16px; }
               .exp-period { font-size: 12px; color: #4b5563; margin-bottom: 8px; }
               ul { list-style-type: disc; margin-left: 16px; margin-top: 8px; }
               li { margin-bottom: 4px; }
@@ -220,14 +230,8 @@ const CVContainerInner = () => {
             <header>
               <h1>${cvData.profile.name}</h1>
               <h2>${cvData.profile.role}</h2>
+              <div class="header-separator"></div>
             </header>
-            
-            <div class="summary">
-              ${cvData.profile.summary
-                .split('\n\n')
-                .map((p: string) => `<p>${highlightText(p)}</p>`)
-                .join('')}
-            </div>
 
             <section>
               <div class="section-title">${isEnglish ? 'EXPERIENCE' : 'EXPERIENCIA'}</div>
@@ -244,6 +248,7 @@ const CVContainerInner = () => {
               `
                 )
                 .join('')}
+              <div class="section-separator"></div>
             </section>
 
             <section>
@@ -253,18 +258,21 @@ const CVContainerInner = () => {
                   (edu: any) => `
                 <div class="edu-item">
                   <h4>${edu.degree}</h4>
-                  <div class="edu-info">${edu.institution} ${edu.period}</div>
+                  <div class="edu-info">${edu.institution}  ${edu.period}</div>
                 </div>
               `
                 )
                 .join('')}
+              <div class="section-separator"></div>
             </section>
 
             <section>
               <div class="section-title">${isEnglish ? 'CONTACT' : 'CONTACTO'}</div>
-              <div class="contact-item"><span class="contact-label">Email:</span> <a href="mailto:${cvData.profile.email}">${cvData.profile.email}</a></div>
-              <div class="contact-item"><span class="contact-label">LinkedIn:</span> <a href="https://${cvData.profile.linkedin}" target="_blank">${cvData.profile.linkedin}</a></div>
-              <div class="contact-item"><span class="contact-label">GitHub:</span> <a href="https://${cvData.profile.github}" target="_blank">${cvData.profile.github}</a></div>
+              <ul>
+                <li><span class="contact-label">Email:</span> <a href="mailto:${cvData.profile.email}">${cvData.profile.email}</a></li>
+                <li><span class="contact-label">LinkedIn:</span> <a href="https://${cvData.profile.linkedin}" target="_blank">${cvData.profile.linkedin}</a></li>
+                <li><span class="contact-label">GitHub:</span> <a href="https://${cvData.profile.github}" target="_blank">${cvData.profile.github}</a></li>
+              </ul>
             </section>
           </body>
         </html>
