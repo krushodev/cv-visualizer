@@ -5,7 +5,6 @@ interface Props {
 
 const { title } = Astro.props;
 import '../styles/global.css';
-import CustomCursor from '../components/ui/CustomCursor.astro';
 ---
 
 <!doctype html>
@@ -21,8 +20,7 @@ import CustomCursor from '../components/ui/CustomCursor.astro';
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 min-h-screen transition-colors duration-300 antialiased">
-    <CustomCursor />
+  <body class="bg-[#e5e5e5] dark:bg-[#09090b] min-h-screen m-0 p-0 overflow-x-hidden">
     <slot />
   </body>
 </html>

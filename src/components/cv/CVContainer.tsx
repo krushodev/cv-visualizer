@@ -2,11 +2,14 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { CVContent } from './CVContent';
 import { CVToolbar } from './CVToolbar';
-import { CVSidebar } from './CVSidebar';
+import { LanguagePicker } from '@/components/ui/LanguagePicker';
+import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
+import CustomCursor from '@/components/ui/CustomCursor';
 import { cn } from '@/lib/utils';
 
-export const CVContainer = ({ initialData }: { initialData: any }) => {
-  const [zoom, setZoom] = useState(0.95);
+const CVContainerInner = () => {
+  const { cvData } = useLanguage();
+  const [zoom, setZoom] = useState(1.0);
   const [is3D, setIs3D] = useState(false);
 
   const handleSetIs3D = useCallback((val: boolean) => {
@@ -61,19 +64,15 @@ export const CVContainer = ({ initialData }: { initialData: any }) => {
 
   const toggleTheme = useCallback(() => {
     const currentlyDark = document.documentElement.classList.contains('dark');
-    console.log('toggleTheme called, currentlyDark:', currentlyDark);
     const newTheme = !currentlyDark;
-    console.log('Setting new theme to dark:', newTheme);
 
     if (newTheme) {
       document.documentElement.classList.add('dark');
-      console.log('Added dark class');
     } else {
       document.documentElement.classList.remove('dark');
     }
 
     localStorage.setItem('theme', newTheme ? 'dark' : 'light');
-
     setIsDark(newTheme);
   }, []);
 
@@ -85,15 +84,68 @@ export const CVContainer = ({ initialData }: { initialData: any }) => {
       const { default: jsPDF } = await import('jspdf');
       const { default: html2canvas } = await import('html2canvas');
 
+      // Detect language from CV data
+      const isEnglish = cvData.profile.summary.includes('Experienced in creating efficient');
+      const langSuffix = isEnglish ? 'EN' : 'ES';
+      const fileName = `CV_IGNACIO_KRUCHOWSKI_${langSuffix}.pdf`;
+
+      // Create an iframe to isolate from Tailwind's oklab colors
       const iframe = document.createElement('iframe');
       iframe.style.position = 'fixed';
       iframe.style.left = '-9999px';
+      iframe.style.top = '0';
       iframe.style.width = '210mm';
       iframe.style.height = '297mm';
+      iframe.style.border = 'none';
       document.body.appendChild(iframe);
 
       const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
       if (!iframeDoc) throw new Error('Could not access iframe document');
+
+      // Get colors based on theme
+      const bgColor = isDark ? '#212121' : '#ffffff';
+      const textColor = isDark ? '#e2e8f0' : '#000000';
+      const headingColor = isDark ? '#ffffff' : '#000000';
+      const mutedColor = isDark ? '#cbd5e1' : '#000000';
+      const linkColor = isDark ? '#60a5fa' : '#2563eb';
+      const borderColor = isDark ? '#ffffff' : '#000000';
+      const sectionBorderColor = isDark ? '#475569' : '#000000';
+
+      // Keywords to highlight in bold
+      const keywords = [
+        'React',
+        'Next.js',
+        'TypeScript',
+        'Redux',
+        'HTML5',
+        'CSS3',
+        'Astro',
+        'React Native',
+        'Expo',
+        'Expo Go',
+        'Node.js',
+        'Express.js',
+        'Python',
+        'FastAPI',
+        'NestJS',
+        'Docker',
+        'AWS',
+        'MongoDB',
+        'PostgreSQL',
+        'Git',
+        'LangGraph',
+        'LLMs',
+        'UX'
+      ];
+
+      const highlightText = (text: string) => {
+        let result = text;
+        keywords.forEach(keyword => {
+          const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+          result = result.replace(regex, `<strong>${keyword}</strong>`);
+        });
+        return result;
+      };
 
       iframeDoc.open();
       iframeDoc.write(`
@@ -101,63 +153,132 @@ export const CVContainer = ({ initialData }: { initialData: any }) => {
         <html>
           <head>
             <meta charset="utf-8">
+            <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
             <style>
-              * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-              }
+              * { margin: 0; padding: 0; box-sizing: border-box; }
               body {
                 width: 210mm;
                 min-height: 297mm;
-                background-color: ${isDark ? '#1a1a1a' : '#ffffff'};
-                color: ${isDark ? '#e2e8f0' : '#000000'};
-                font-family: system-ui, -apple-system, sans-serif;
+                background-color: ${bgColor};
+                color: ${textColor};
+                font-family: 'Lato', system-ui, -apple-system, sans-serif;
                 padding: 40px 50px;
+                font-size: 13px;
+                line-height: 1.5;
               }
               header {
-                border-bottom: 2px solid ${isDark ? '#ffffff' : '#000000'};
+                border-bottom: 2px solid ${borderColor};
                 padding-bottom: 16px;
                 margin-bottom: 24px;
               }
-              h1, h2, h3, h4 {
-                color: ${isDark ? '#ffffff' : '#000000'};
-                font-weight: bold;
-              }
-              h1 { font-size: 32px; }
-              h2 { font-size: 18px; }
-              h3 { font-size: 20px; }
-              h4 { font-size: 16px; }
-              section {
-                margin-bottom: 24px;
-              }
-              ul {
-                list-style-type: disc;
-                margin-left: 16px;
-              }
-              a {
-                color: ${isDark ? '#60a5fa' : '#2563eb'};
-                text-decoration: underline;
-              }
-              div {
+              h1 {
+                font-size: 32px;
+                font-weight: 900;
+                text-transform: uppercase;
+                letter-spacing: -0.025em;
+                color: ${headingColor};
                 margin-bottom: 4px;
               }
+              h2 {
+                font-size: 18px;
+                font-weight: 400;
+                color: ${mutedColor};
+                letter-spacing: 0.05em;
+              }
+              .section-title {
+                font-size: 20px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: ${headingColor};
+                padding-bottom: 8px;
+                margin-bottom: 16px;
+                border-bottom: 1px solid ${sectionBorderColor};
+              }
+              h4 {
+                font-size: 16px;
+                font-weight: 700;
+                color: ${headingColor};
+                margin-bottom: 2px;
+              }
+              .summary { margin-bottom: 24px; }
+              .summary p { margin-bottom: 12px; }
+              section { margin-bottom: 24px; }
+              .exp-item { margin-bottom: 20px; }
+              .exp-period { font-size: 12px; color: ${isDark ? '#94a3b8' : '#4b5563'}; margin-bottom: 8px; }
+              ul { list-style-type: disc; margin-left: 16px; margin-top: 8px; }
+              li { margin-bottom: 4px; }
+              a { color: ${linkColor}; text-decoration: none; }
+              a:hover { text-decoration: underline; }
+              .contact-item { margin-bottom: 4px; }
+              .contact-label { font-weight: 500; }
+              strong { font-weight: 700; }
+              .edu-item { margin-bottom: 8px; }
+              .edu-info { font-size: 13px; color: ${textColor}; }
             </style>
           </head>
           <body>
-            ${element.innerHTML}
+            <header>
+              <h1>${cvData.profile.name}</h1>
+              <h2>${cvData.profile.role}</h2>
+            </header>
+            
+            <div class="summary">
+              ${cvData.profile.summary
+                .split('\n\n')
+                .map((p: string) => `<p>${highlightText(p)}</p>`)
+                .join('')}
+            </div>
+
+            <section>
+              <div class="section-title">${isEnglish ? 'EXPERIENCE' : 'EXPERIENCIA'}</div>
+              ${cvData.experience
+                .map(
+                  (exp: any) => `
+                <div class="exp-item">
+                  <h4>${exp.company} | ${exp.role}</h4>
+                  <div class="exp-period">${exp.period}</div>
+                  <ul>
+                    ${exp.bullets.map((b: string) => `<li>${highlightText(b)}</li>`).join('')}
+                  </ul>
+                </div>
+              `
+                )
+                .join('')}
+            </section>
+
+            <section>
+              <div class="section-title">${isEnglish ? 'EDUCATION' : 'EDUCACIÓN'}</div>
+              ${cvData.education
+                .map(
+                  (edu: any) => `
+                <div class="edu-item">
+                  <h4>${edu.degree}</h4>
+                  <div class="edu-info">${edu.institution} ${edu.period}</div>
+                </div>
+              `
+                )
+                .join('')}
+            </section>
+
+            <section>
+              <div class="section-title">${isEnglish ? 'CONTACT' : 'CONTACTO'}</div>
+              <div class="contact-item"><span class="contact-label">Email:</span> <a href="mailto:${cvData.profile.email}">${cvData.profile.email}</a></div>
+              <div class="contact-item"><span class="contact-label">LinkedIn:</span> <a href="https://${cvData.profile.linkedin}" target="_blank">${cvData.profile.linkedin}</a></div>
+              <div class="contact-item"><span class="contact-label">GitHub:</span> <a href="https://${cvData.profile.github}" target="_blank">${cvData.profile.github}</a></div>
+            </section>
           </body>
         </html>
       `);
       iframeDoc.close();
 
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Wait for fonts to load
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       const canvas = await html2canvas(iframeDoc.body, {
         scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: isDark ? '#1a1a1a' : '#ffffff'
+        backgroundColor: bgColor
       });
 
       document.body.removeChild(iframe);
@@ -173,14 +294,14 @@ export const CVContainer = ({ initialData }: { initialData: any }) => {
       const pdfHeight = pdf.internal.pageSize.getHeight();
 
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save('CV.pdf');
+      pdf.save(fileName);
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
   };
 
   const handleReset = () => {
-    setZoom(0.95);
+    setZoom(1.0);
     setIs3D(false);
     x.set(0);
     y.set(0);
@@ -188,14 +309,15 @@ export const CVContainer = ({ initialData }: { initialData: any }) => {
 
   return (
     <div className="min-h-screen w-full bg-[#e5e5e5] dark:bg-[#09090b] flex flex-col items-center justify-center transition-colors duration-500 overflow-hidden relative">
+      <CustomCursor />
       <div
         className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none"
         style={{ backgroundImage: 'radial-gradient(circle, #808080 1px, transparent 1px)', backgroundSize: '20px 20px' }}
       ></div>
 
-      <CVSidebar is3D={is3D} setIs3D={handleSetIs3D} />
+      <LanguagePicker />
 
-      <CVToolbar zoom={zoom} setZoom={setZoom} onPrint={handlePrint} onReset={handleReset} />
+      <CVToolbar zoom={zoom} setZoom={setZoom} onPrint={handlePrint} onReset={handleReset} onToggleTheme={toggleTheme} isDark={isDark} is3D={is3D} setIs3D={handleSetIs3D} />
 
       <motion.div style={{ perspective: 1200 }} className="relative py-12 z-10">
         <motion.div
@@ -222,9 +344,17 @@ export const CVContainer = ({ initialData }: { initialData: any }) => {
             />
           )}
 
-          <CVContent data={initialData} />
+          <CVContent data={cvData} />
         </motion.div>
       </motion.div>
     </div>
+  );
+};
+
+export const CVContainer = () => {
+  return (
+    <LanguageProvider>
+      <CVContainerInner />
+    </LanguageProvider>
   );
 };

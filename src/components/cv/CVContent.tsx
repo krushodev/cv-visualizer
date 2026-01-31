@@ -6,6 +6,21 @@ interface CVData {
 }
 
 export const CVContent = ({ data }: { data: CVData }) => {
+  const getSectionTitle = (key: string) => {
+    // Detect language based on content
+    const isEnglish = data.profile.summary.includes('Experienced in creating efficient');
+
+    const titles = {
+      experience: isEnglish ? 'EXPERIENCE' : 'EXPERIENCIA',
+      education: isEnglish ? 'EDUCATION' : 'EDUCACIÓN',
+      contact: isEnglish ? 'CONTACT' : 'CONTACTO',
+      email: isEnglish ? 'Email' : 'Email',
+      linkedin: isEnglish ? 'LinkedIn' : 'LinkedIn',
+      github: isEnglish ? 'GitHub' : 'GitHub'
+    };
+
+    return titles[key as keyof typeof titles] || key;
+  };
   const highlightKeywords = (text: string) => {
     const keywords = [
       'React',
@@ -41,7 +56,7 @@ export const CVContent = ({ data }: { data: CVData }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-[#1a1a1a] text-black dark:text-slate-200 w-full h-full p-[40px] md:p-[50px] flex flex-col font-sans">
+    <div className="bg-white dark:bg-[#212121] text-black dark:text-slate-200 w-full h-full min-h-[297mm] p-[40px] md:p-[50px] flex flex-col font-sans">
       <header className="border-b-2 border-black dark:border-white pb-4 mb-6">
         <h1 className="text-4xl font-black tracking-tight text-black dark:text-white uppercase leading-none mb-1">{data.profile.name}</h1>
         <h2 className="text-lg font-normal text-black dark:text-slate-300 tracking-wide">{data.profile.role}</h2>
@@ -54,7 +69,7 @@ export const CVContent = ({ data }: { data: CVData }) => {
       </div>
 
       <section className="mb-6">
-        <h3 className="text-xl font-bold uppercase border-b border-black dark:border-slate-600 pb-1 mb-4 text-black dark:text-white">EXPERIENCIA</h3>
+        <h3 className="text-xl font-bold uppercase border-b border-black dark:border-slate-600 pb-1 mb-4 text-black dark:text-white">{getSectionTitle('experience')}</h3>
 
         <div className="flex flex-col gap-5">
           {data.experience.map(job => (
@@ -79,7 +94,7 @@ export const CVContent = ({ data }: { data: CVData }) => {
       </section>
 
       <section className="mb-6">
-        <h3 className="text-xl font-bold uppercase border-b border-black dark:border-slate-600 pb-1 mb-4 text-black dark:text-white">EDUCACIÓN</h3>
+        <h3 className="text-xl font-bold uppercase border-b border-black dark:border-slate-600 pb-1 mb-4 text-black dark:text-white">{getSectionTitle('education')}</h3>
         {data.education.map(edu => (
           <div key={edu.id}>
             <h4 className="text-base font-bold text-black dark:text-white">{edu.degree}</h4>
@@ -90,8 +105,8 @@ export const CVContent = ({ data }: { data: CVData }) => {
         ))}
       </section>
 
-      <section>
-        <h3 className="text-xl font-bold uppercase border-b border-black dark:border-slate-600 pb-1 mb-4 text-black dark:text-white">CONTACTO</h3>
+      <section className="mt-auto">
+        <h3 className="text-xl font-bold uppercase border-b border-black dark:border-slate-600 pb-1 mb-4 text-black dark:text-white">{getSectionTitle('contact')}</h3>
         <div className="text-[13px] text-black dark:text-slate-300 space-y-1">
           <div>
             <span className="font-medium">Email:</span>{' '}

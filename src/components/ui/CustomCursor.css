@@ -1,0 +1,44 @@
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  mix-blend-mode: difference;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  z-index: 9999;
+  transition: none;
+  opacity: 1;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Hide native cursor completely */
+* {
+  cursor: none !important;
+}
+
+/* Ensure cursor is hidden on all interactive elements */
+a,
+button,
+input,
+textarea,
+select,
+[role='button'],
+[tabindex] {
+  cursor: none !important;
+}
+
+/* Hide cursor on hover states */
+*:hover {
+  cursor: none !important;
+}
+
+/* Hide cursor on focus states */
+*:focus {
+  cursor: none !important;
+}

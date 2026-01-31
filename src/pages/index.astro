@@ -7,7 +7,7 @@ import cvData from '../data/cv-content.json';
 ---
 
 <Layout title={`CV - ${cvData.profile.name}`}>
-  <CVContainer client:load initialData={cvData} />
+  <CVContainer client:load />
 </Layout>
 
 <style is:global>

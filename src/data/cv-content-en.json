@@ -1,0 +1,66 @@
+{
+  "profile": {
+    "name": "Ignacio Kruchowski",
+    "role": "FRONTEND / FULL STACK DEVELOPER",
+    "email": "ignakruchowski@gmail.com",
+    "linkedin": "linkedin.com/in/ignacio-kruchowski",
+    "github": "github.com/krushodev",
+    "summary": "Experienced in creating efficient, scalable user interfaces focused on user experience. Proficient in React, Next.js, TypeScript, Redux, HTML5, and CSS3, as well as mobile app development with React Native and Expo.\n\nI have knowledge in software architecture, databases, DevOps, and backend development with Node.js and Express.js, bringing a comprehensive perspective to the development lifecycle. I excel at applying design principles, responsive design, and mobile-first approaches, ensuring modern and maintainable products."
+  },
+  "experience": [
+    {
+      "id": "exp-1",
+      "company": "A4F",
+      "role": "Full Stack Developer",
+      "period": "Jan. 2025 - Sep. 2025 (9 months)",
+      "bullets": [
+        "Developed key features in web applications using Next.js and Astro, improving scalability and maintainability.",
+        "Led the integration of backend solutions with Python (FastAPI) and NestJS, managing data persistence with MongoDB and PostgreSQL, and deploying with Docker and AWS.",
+        "Integrated Artificial Intelligence capabilities in applications, applying prompt engineering with LangGraph to optimize LLM responses.",
+        "Collaborated in the development of a cross-platform mobile application with React Native and Expo Go, improving accessibility and UX.",
+        "Actively participated in an agile environment, contributing to sprints, code reviews, and collaborative management with Git."
+      ]
+    },
+    {
+      "id": "exp-2",
+      "company": "Sempiterno Group",
+      "role": "Frontend Developer",
+      "period": "Dec. 2023 - Jun. 2024 (7 months)",
+      "bullets": [
+        "Developed and optimized web applications with ReactJS and NextJS",
+        "Carried out maintenance of different projects, ensuring effective solutions",
+        "Strategically planned the development of reusable components to optimize code management",
+        "Assumed leadership roles at key moments, facilitating team collaboration to achieve established objectives"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "edu-1",
+      "institution": "Universidad Nacional del Nordeste",
+      "degree": "Bachelor's Degree in Information Systems",
+      "period": "2024 - 2029"
+    }
+  ],
+  "skills": [
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Redux",
+    "HTML5",
+    "CSS3",
+    "Astro",
+    "React Native",
+    "Expo",
+    "Node.js",
+    "Express.js",
+    "Python",
+    "FastAPI",
+    "NestJS",
+    "Docker",
+    "AWS",
+    "MongoDB",
+    "PostgreSQL",
+    "Git"
+  ]
+}

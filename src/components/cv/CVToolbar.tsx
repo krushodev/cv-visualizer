@@ -1,4 +1,4 @@
-import { FaSearchPlus, FaSearchMinus, FaDownload, FaRedo } from 'react-icons/fa';
+import { FaSearchPlus, FaSearchMinus, FaDownload, FaRedo, FaMoon, FaSun, FaAddressCard } from 'react-icons/fa';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
@@ -7,9 +7,13 @@ interface CVToolbarProps {
   setZoom: (zoom: number) => void;
   onPrint: () => void;
   onReset: () => void;
+  onToggleTheme: () => void;
+  isDark: boolean;
+  is3D: boolean;
+  setIs3D: (val: boolean) => void;
 }
 
-export const CVToolbar = ({ zoom, setZoom, onPrint, onReset }: CVToolbarProps) => {
+export const CVToolbar = ({ zoom, setZoom, onPrint, onReset, onToggleTheme, isDark, is3D, setIs3D }: CVToolbarProps) => {
   const iconClass = 'w-4 h-4';
   const btnClass = 'p-3 hover:bg-white/10 rounded-lg transition-all active:scale-95 text-slate-400 hover:text-white flex items-center justify-center relative group';
 
@@ -32,6 +36,17 @@ export const CVToolbar = ({ zoom, setZoom, onPrint, onReset }: CVToolbarProps) =
           </button>
           <button onClick={onPrint} className={cn(btnClass, 'text-green-400 hover:text-green-300')} title="Descargar PDF">
             <FaDownload className={iconClass} />
+          </button>
+        </div>
+
+        <div className="w-px h-6 bg-white/20 mx-1" />
+
+        <div className="flex items-center gap-1">
+          <button onClick={() => setIs3D(!is3D)} className={cn(btnClass, is3D ? 'text-blue-400' : '')} title={is3D ? 'Vista plana' : 'Vista 3D'}>
+            <FaAddressCard className={iconClass} />
+          </button>
+          <button onClick={onToggleTheme} className={btnClass} title={isDark ? 'Tema claro' : 'Tema oscuro'}>
+            {isDark ? <FaSun className={iconClass} /> : <FaMoon className={iconClass} />}
           </button>
         </div>
       </div>
