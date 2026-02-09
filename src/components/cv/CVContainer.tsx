@@ -327,7 +327,7 @@ const CVContainerInner = () => {
 
       <CVToolbar zoom={zoom} setZoom={setZoom} onPrint={handlePrint} onReset={handleReset} onToggleTheme={toggleTheme} isDark={isDark} is3D={is3D} setIs3D={handleSetIs3D} />
 
-      <motion.div style={{ perspective: 1200 }} className="relative py-12 z-10">
+      <motion.div style={{ perspective: 1200 }} className="relative py-6 sm:py-8 md:py-12 z-10 w-full px-4 sm:px-6 md:px-0 flex justify-center">
         <motion.div
           ref={ref}
           style={{
@@ -340,7 +340,10 @@ const CVContainerInner = () => {
           onMouseLeave={handleMouseLeave}
           animate={{ scale: zoom }}
           transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-          className={cn('relative w-[210mm] min-h-[297mm] transition-all duration-300 ease-out origin-center', is3D ? 'shadow-2xl shadow-black/40' : 'shadow-lg shadow-black/10')}
+          className={cn(
+            'relative w-full max-w-[210mm] min-h-auto md:min-h-[297mm] transition-all duration-300 ease-out origin-center',
+            is3D ? 'shadow-2xl shadow-black/40' : 'shadow-lg shadow-black/10'
+          )}
         >
           {is3D && (
             <motion.div

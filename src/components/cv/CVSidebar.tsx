@@ -66,30 +66,30 @@ export const CVSidebar = ({ is3D, setIs3D }: CVSidebarProps) => {
   };
 
   return (
-    <div className="fixed left-4 top-1/2 -translate-y-1/2 z-[9998]">
-      <div className="flex flex-col items-center gap-2 p-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-sm">
+    <div className="fixed left-3 sm:left-4 top-4 sm:top-1/2 sm:-translate-y-1/2 z-[9998]">
+      <div className="flex flex-row sm:flex-col items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-sm">
         <button
           type="button"
           onClick={handleIs3DClick}
-          className={`w-9 h-9 flex items-center justify-center rounded-md transition-colors cursor-pointer ${
+          className={`w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center rounded-md transition-colors cursor-pointer ${
             is3D ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
           }`}
           title={is3D ? 'Vista plana' : 'Vista 3D'}
         >
-          {is3D ? <FaCube className="w-4 h-4" /> : <HiOutlineViewGrid className="w-4 h-4" />}
+          {is3D ? <FaCube className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <HiOutlineViewGrid className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
         </button>
 
-        <div className="w-5 h-px bg-neutral-200 dark:bg-neutral-700" />
+        <div className="w-px h-5 sm:w-5 sm:h-px bg-neutral-200 dark:bg-neutral-700" />
 
         <button
           type="button"
           onClick={handleThemeClick}
-          className={`w-9 h-9 flex items-center justify-center rounded-md transition-colors cursor-pointer ${
+          className={`w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center rounded-md transition-colors cursor-pointer ${
             isDark ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
           }`}
           title={isDark ? 'Tema claro' : 'Tema oscuro'}
         >
-          {isDark ? <FaSun className="w-4 h-4" /> : <FaMoon className="w-4 h-4" />}
+          {isDark ? <FaSun className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <FaMoon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
         </button>
       </div>
     </div>
